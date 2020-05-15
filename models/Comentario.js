@@ -1,41 +1,42 @@
-let Post = (sequelize, DataTypes) => {
-    let post = sequelize.define(
-        'Post',
+const Comentario = (sequelize,DataTypes) => {
+    let c = sequelize.define(
+        'Comentario',
+        
         {
-            id: {
+            id:{
                 type: DataTypes.INTEGER,
                 primaryKey:true,
                 allowNull: false,
                 autoIncrement: true
             },
-            texto: {
+            texto:{
                 type: DataTypes.STRING,
                 allowNull: false
-            },
-            img:{
-                type: DataTypes.STRING,
-                allowNull: true
             },
             usuarios_id:{
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
-            n_likes: {
+            posts_id:{
                 type: DataTypes.INTEGER,
-                defaultValue: 0
+                allowNull: false
             }
+
         },
+
         {
-            tableName: "posts",
+            tableName:"comentarios",
             timestamps: true
         }
     );
+    
+    c.associate= (models)=> {
+        c.belongsTo(models.Usuario,{foreignKey:"usuarios_id", as:"autor" });
+        c.belongsTo(models.Post,{foreignKey:"posts_id", as:"post" });
+    } 
 
-    post.associate = (models) => {
-        post.belongsTo(models.Usuario, {foreignKey:'usuarios_id', as: 'autor'});
-    }
+    return c;
 
-    return post;
 }
 
-module.exports = Post;
+module.exports = Comentario;
