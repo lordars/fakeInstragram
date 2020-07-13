@@ -1,5 +1,9 @@
-const { Usuario } = require('../models');
 const bcrpyt = require('bcrypt');
+
+const saltRounds = 10
+const Sequelize = require("sequelize")
+const {index,Comentarios,Post,Usuario} = require ('../models')
+
 
 const AuthController = {
     
@@ -8,11 +12,33 @@ const AuthController = {
         res.render('auth/login',{err});
     },
 
-    showRegistro: (req,res) => {
-        res.render('auth/register');
+    showRegistro: (req,res)=>{
+
+        
+              res.render('auth/register');    
     },
+    Registrar: async (req,res) =>  {
+        let {senha, email, nome , usuario} = req.body;
+        const salt = bcrpyt.genSaltSync(saltRounds)
+        const hash = bcrpyt.hashSync(senha, salt)
+            console.log(hash+ "**************")
+          
+    
+      
+         
+              
+        let addUsuario = await Usuario.create({
+            nome:nome,
+            usuario:usuario,
+            senha:hash,
+            email:email
+        })
+        res.render('auth/register');    }
+    ,
 
     showHome: (req,res) => {
+
+
         res.render('index');
     },
 
